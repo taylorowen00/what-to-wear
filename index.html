@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="What to Wear — clothing recommendations based on the weather in any city." />
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+<title>What to Wear</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A7%A5%3C/text%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,400;9..144,500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css?v=19" />
+</head>
+<body>
+<header>
+  <div class="header-row">
+    <h1>What to Wear</h1>
+    <button id="settingsBtn" class="icon-btn" aria-label="Settings" title="Settings">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </button>
+  </div>
+  <p class="tagline">Tell me where you are — I'll tell you what to wear.</p>
+</header>
+
+<main>
+  <section class="search-section">
+    <form id="cityForm" autocomplete="off">
+      <div class="search-wrap">
+        <input
+          type="text"
+          id="cityInput"
+          placeholder="Search a city (or use my location)"
+          aria-label="City"
+          autocomplete="off"
+        />
+        <button type="button" id="locBtn" class="loc-btn" aria-label="Use my location" title="Use my location">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+        </button>
+        <ul id="suggestions" class="suggestions" role="listbox"></ul>
+      </div>
+    </form>
+    <div id="favorites" class="favorites" aria-label="Saved cities"></div>
+  </section>
+
+  <section id="loading" class="loading hidden">
+    <div class="spinner"></div>
+    <p>Checking the weather…</p>
+  </section>
+
+  <section id="error" class="error hidden"></section>
+
+  <section id="result" class="result hidden">
+    <div class="location-bar">
+      <h2 id="locationName"></h2>
+      <div class="location-actions">
+        <span id="locationTime" class="muted"></span>
+        <button type="button" id="favBtn" class="icon-btn-sm" aria-label="Save this city" title="Save city">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15 8.5 22 9.3 17 14.1 18.2 21 12 17.8 5.8 21 7 14.1 2 9.3 9 8.5 12 2"/></svg>
+        </button>
+        <button type="button" id="shareBtn" class="icon-btn-sm" aria-label="Copy share link" title="Copy share link">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="now">
+      <div class="now-icon" id="nowIcon">☀️</div>
+      <div class="now-temp">
+        <div class="temp" id="nowTemp">—°</div>
+        <div class="feels muted" id="nowFeels"></div>
+      </div>
+      <div class="now-meta">
+        <div id="nowDesc"></div>
+        <div class="muted" id="nowMeta"></div>
+      </div>
+    </div>
+
+    <div class="forecast card forecast-compact">
+      <h3>Next 5 days</h3>
+      <div id="forecast" class="forecast-grid"></div>
+    </div>
+
+    <div class="recommendation card">
+      <div class="rec-header">
+        <h3>What to wear</h3>
+        <div class="rec-toggles">
+          <div class="period-toggle" role="tablist" aria-label="Time of day">
+            <button type="button" class="period-btn active" data-period="day" role="tab">Day</button>
+            <button type="button" class="period-btn" data-period="night" role="tab">Night</button>
+          </div>
+          <div class="style-toggle rec-style-toggle" role="tablist" aria-label="Style context">
+            <button type="button" class="style-btn" data-style="casual" role="tab">Casual</button>
+            <button type="button" class="style-btn" data-style="business" role="tab">Business</button>
+            <button type="button" class="style-btn" data-style="outdoor" role="tab">Active</button>
+          </div>
+        </div>
+      </div>
+      <div id="recFor" class="rec-for muted small"></div>
+      <div id="outfitHeadline" class="outfit-headline"></div>
+      <ul id="outfitList" class="outfit-list"></ul>
+      <div id="outfitNotes" class="notes muted"></div>
+    </div>
+
+    <details class="card collapsible" id="tripCard" open>
+      <summary><h3>Plan a trip</h3><span class="hint muted small">Pick dates → packing list</span></summary>
+      <div class="trip-form">
+        <label class="field inline">
+          <span>From</span>
+          <input type="date" id="tripStart" />
+        </label>
+        <label class="field inline">
+          <span>To</span>
+          <input type="date" id="tripEnd" />
+        </label>
+        <button type="button" id="tripGo" class="btn-primary">Update</button>
+      </div>
+
+      <div class="trip-cities">
+        <div class="trip-cities-label muted small">Destinations</div>
+        <ul id="tripCityList" class="trip-city-list"></ul>
+        <div class="trip-add-wrap">
+          <button type="button" id="tripAddBtn" class="trip-add-btn">+ Add a city</button>
+          <form id="tripAddForm" class="trip-add-form hidden" autocomplete="off">
+            <div class="search-wrap small-wrap">
+              <input type="text" id="tripAddInput" placeholder="Search a city to add" autocomplete="off" />
+              <button type="button" id="tripAddCancel" class="loc-btn" aria-label="Cancel">×</button>
+              <ul id="tripAddSuggestions" class="suggestions" role="listbox"></ul>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div id="tripError" class="error hidden small"></div>
+      <div id="tripDays" class="forecast-grid trip-days"></div>
+      <div id="tripSummary" class="muted small"></div>
+    </details>
+
+    <div class="packing card hidden" id="packingCard">
+      <div class="rec-header">
+        <h3>Packing for the trip</h3>
+        <div class="style-toggle pack-style-toggle" role="tablist" aria-label="Style context">
+          <button type="button" class="style-btn" data-style="casual" role="tab">Casual</button>
+          <button type="button" class="style-btn" data-style="business" role="tab">Business</button>
+          <button type="button" class="style-btn" data-style="outdoor" role="tab">Active</button>
+        </div>
+      </div>
+      <ul id="packingList" class="outfit-list"></ul>
+    </div>
+
+    <div class="card" id="compareCard">
+      <div class="rec-header">
+        <h3>Compare with another city</h3>
+        <span class="hint muted small">e.g. home vs destination</span>
+      </div>
+      <form id="compareForm" class="compare-form" autocomplete="off">
+        <div class="search-wrap">
+          <input type="text" id="compareInput" placeholder="Search a city to compare" autocomplete="off" />
+          <ul id="compareSuggestions" class="suggestions" role="listbox"></ul>
+        </div>
+      </form>
+      <div id="compareResult" class="compare-result hidden">
+        <div class="compare-grid">
+          <div class="compare-col" id="compareColA"></div>
+          <div class="compare-col" id="compareColB"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<dialog id="settingsDialog" class="settings-dialog">
+  <form method="dialog" id="settingsForm">
+    <h2>Settings</h2>
+
+    <label class="field">
+      <span>Gender (clothing style)</span>
+      <select id="gender">
+        <option value="neutral">Neutral / no preference</option>
+        <option value="masc">More masculine styling</option>
+        <option value="femme">More feminine styling</option>
+      </select>
+    </label>
+
+    <fieldset class="field">
+      <legend>Temperature preference</legend>
+      <p class="muted small">How do you usually feel relative to most people?</p>
+      <label class="radio">
+        <input type="radio" name="tempPref" value="cold" />
+        <span>I run cold — I like to overdress</span>
+      </label>
+      <label class="radio">
+        <input type="radio" name="tempPref" value="normal" />
+        <span>Average</span>
+      </label>
+      <label class="radio">
+        <input type="radio" name="tempPref" value="warm" />
+        <span>I run warm — I underdress</span>
+      </label>
+    </fieldset>
+
+    <label class="field">
+      <span>Units</span>
+      <select id="units">
+        <option value="metric">Celsius / km/h</option>
+        <option value="imperial">Fahrenheit / mph</option>
+      </select>
+    </label>
+
+    <label class="field">
+      <span>Style context</span>
+      <select id="style">
+        <option value="casual">Casual</option>
+        <option value="business">Business / smart</option>
+        <option value="outdoor">Outdoor / active</option>
+      </select>
+    </label>
+
+    <div class="dialog-actions">
+      <button type="button" id="cancelSettings" class="ghost">Cancel</button>
+      <button type="submit" class="primary">Save</button>
+    </div>
+  </form>
+</dialog>
+
+<div id="toast" class="toast hidden" role="status"></div>
+
+<!-- ===========================================================
+     Analytics — pick ONE provider and uncomment.
+     All are privacy-friendly (no cookies, no GDPR banner needed).
+     =========================================================== -->
+
+<!-- GoatCounter analytics — dashboard at https://whattowear.goatcounter.com/ -->
+<script
+  data-goatcounter="https://whattowear.goatcounter.com/count"
+  async src="//gc.zgo.at/count.js"></script>
+
+<!-- 2. Plausible (paid, ~1KB) — replace YOURDOMAIN.com with your site domain
+<script defer data-domain="YOURDOMAIN.com" src="https://plausible.io/js/script.js"></script>
+-->
+
+<!-- 3. Cloudflare Web Analytics (free if you use Cloudflare DNS — no need to host on CF)
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+  data-cf-beacon='{"token": "YOURTOKEN"}'></script>
+-->
+
+<!-- 4. Umami (free if self-hosted, otherwise from cloud.umami.is)
+<script defer src="https://cloud.umami.is/script.js" data-website-id="YOUR-WEBSITE-ID"></script>
+-->
+
+<!-- Local visit counter (always on; useful for dev / fallback) -->
+<script>
+  (function () {
+    try {
+      const k = 'whatToWear.visits.v1';
+      const data = JSON.parse(localStorage.getItem(k) || '{"count":0,"first":null,"last":null}');
+      data.count += 1;
+      data.last = new Date().toISOString();
+      if (!data.first) data.first = data.last;
+      localStorage.setItem(k, JSON.stringify(data));
+      // Expose for ad-hoc inspection: window.visits in the console.
+      window.visits = data;
+    } catch (e) { /* localStorage unavailable — ignore */ }
+  })();
+</script>
+
+<footer>
+  <p class="muted small">
+    Weather by <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a>.
+    Settings are saved in your browser.
+  </p>
+</footer>
+
+<script src="app.js?v=19"></script>
+</body>
+</html>
