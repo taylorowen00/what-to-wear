@@ -16,15 +16,15 @@
 :root {
   /* Minimalist dark — warm-leaning near-black, single amber accent */
   --bg: #0b0b0d;
-  --surface: #111114;
-  --surface-2: #16161a;
+  --surface: #19191f;
+  --surface-2: #22222a;
   --ink: #f2f2f3;
   --ink-dim: #a8a8ad;
-  --ink-muted: #6c6c73;
+  --ink-muted: #7c7c83;
   --ink-faint: #2a2a30;
-  /* Warm-tinted hairlines (amber at 18% / 32% alpha) */
-  --border: oklch(0.78 0.13 75 / 0.18);
-  --border-strong: oklch(0.78 0.13 75 / 0.32);
+  /* Warm-tinted hairlines — bumped from 18%/32% to 32%/55% so card edges read as amber */
+  --border: oklch(0.78 0.13 75 / 0.32);
+  --border-strong: oklch(0.78 0.13 75 / 0.55);
   --accent: oklch(0.78 0.13 75);          /* warm amber */
   --accent-dim: oklch(0.78 0.13 75 / 0.14);
   --accent-line: oklch(0.78 0.13 75 / 0.4);
@@ -266,7 +266,7 @@ h1::before {
   padding: 28px;
   margin-bottom: 24px;
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-strong);
   border-radius: var(--radius-lg);
 }
 .now-icon {
@@ -325,7 +325,7 @@ h1::before {
 /* ===== Section blocks (lifted cards) ===== */
 .card {
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-strong);
   border-radius: var(--radius-lg);
   padding: 28px 24px;
   margin-bottom: 16px;
