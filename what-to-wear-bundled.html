@@ -63,7 +63,12 @@ body {
   font-feature-settings: "ss01", "cv11";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Prevent any oversized content (long city names, etc.) from causing
+     horizontal scroll on phones. */
+  overflow-x: hidden;
 }
+
+.location-bar h2 { min-width: 0; word-break: break-word; }
 
 ::selection { background: var(--accent-dim); color: var(--ink); }
 
@@ -816,13 +821,79 @@ h1::before {
 }
 
 @media (max-width: 500px) {
-  header, main, footer { padding-left: 20px; padding-right: 20px; }
-  header { padding-top: 36px; }
-  .now-temp .temp { font-size: 56px; }
-  .now-icon { font-size: 30px; }
-  .day { padding: 12px 8px; }
-  .day .ico { font-size: 16px; }
-  .day .hi { font-size: 16px; }
+  header, main, footer { padding-left: 16px; padding-right: 16px; }
+  header { padding-top: 36px; padding-bottom: 4px; margin-bottom: 8px; }
+  .tagline { font-size: 14px; margin-top: 14px; }
+
+  /* Hero "now" panel — tighten padding and shrink the temp on phones */
+  .now { padding: 22px 18px; gap: 16px; }
+  .now-temp .temp { font-size: 56px; letter-spacing: -0.05em; }
+  .now-icon { font-size: 28px; }
+  .now-meta { gap: 4px 14px; padding-top: 0; }
+  .now-meta #nowDesc::after { display: none; }
+
+  /* Cards: tighter padding on phones */
+  .card { padding: 22px 18px; }
+
+  /* Section labels stay readable but tighten margins */
+  .card h3 { margin-bottom: 14px; }
+
+  /* Forecast strip — readable at narrow widths */
+  .forecast-compact { padding: 14px 12px; }
+  .day { padding: 10px 4px; }
+  .day .dow { font-size: 9px; }
+  .day .ico { font-size: 14px; margin: 6px 0 4px; }
+  .day .hi { font-size: 14px; }
+  .day .lo { font-size: 10px; }
+
+  /* Recommendation header: stack toggles below title on narrow screens */
+  .rec-header { gap: 8px; }
+  .rec-toggles { width: 100%; }
+  .period-toggle, .style-toggle { flex: 0 0 auto; }
+  .style-btn, .period-btn { padding: 6px 10px; }
+
+  /* Outfit headline / chips */
+  .outfit-headline { font-size: 16px; max-width: none; }
+  .outfit-list li { font-size: 12px; padding: 6px 12px 6px 10px; }
+
+  /* Location bar — let the city name shrink so the time pill stays inline */
+  .location-bar h2 { font-size: 24px; }
+  .location-bar { gap: 8px; }
+
+  /* Tap targets: small icon buttons get a touch larger on phones */
+  .icon-btn-sm { width: 34px; height: 34px; }
+
+  /* Trip planner */
+  .field.inline { flex-basis: 100%; }
+  .field.inline input { padding: 12px; font-size: 14px; }
+  .trip-cities { margin-top: 18px; padding-top: 18px; }
+
+  /* Settings dialog: slightly tighter padding */
+  .settings-dialog form { padding: 22px 20px; }
+  .settings-dialog h2 { margin-bottom: 18px; }
+  .field { margin-bottom: 18px; }
+
+  /* Compare cols stack at 540px already, tighten padding here */
+  .compare-col { padding: 14px; }
+
+  /* Footer */
+  footer { padding: 32px 16px 40px; margin-top: 32px; }
+}
+
+/* Very small phones (iPhone SE, narrow Androids) */
+@media (max-width: 380px) {
+  header, main, footer { padding-left: 14px; padding-right: 14px; }
+  .now-temp .temp { font-size: 48px; }
+  .now { padding: 18px 14px; }
+  .card { padding: 18px 14px; }
+  .forecast-compact { padding: 12px 8px; }
+  .day { padding: 8px 2px; }
+  .day .dow { font-size: 8px; letter-spacing: 0.08em; }
+  .day .ico { font-size: 13px; }
+  .day .hi { font-size: 13px; }
+  .day .lo { font-size: 9px; }
+  .outfit-list li { font-size: 11px; padding: 5px 10px 5px 8px; }
+  .style-btn, .period-btn { font-size: 10px; padding: 5px 8px; }
 }
 
 footer {
